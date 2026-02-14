@@ -1,0 +1,79 @@
+[
+  {
+    "theme_id": "us_recession_risk",
+    "name": "US Recession Risk",
+    "description": "Markets tied to US recession and macro risk.",
+    "legs": [
+      {
+        "market_ticker": "RECESSION-25",
+        "event_ticker": "RECESSION-25",
+        "title": "US recession in 2025?",
+        "direction": "BUY_YES",
+        "weight": 0.34,
+        "enabled": true
+      },
+      {
+        "market_ticker": "FEDCUT-DEC25",
+        "event_ticker": "FEDCUT-DEC25",
+        "title": "Fed rate cut by Dec 2025",
+        "direction": "BUY_YES",
+        "weight": 0.33,
+        "enabled": true
+      },
+      {
+        "market_ticker": "UNEMPLOY-25",
+        "event_ticker": "UNEMPLOY-25",
+        "title": "Unemployment above 5% in 2025",
+        "direction": "BUY_YES",
+        "weight": 0.33,
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "theme_id": "election_volatility",
+    "name": "Election Volatility",
+    "description": "Election-related outcome markets.",
+    "legs": [
+      {
+        "market_ticker": "PRES-WIN-25",
+        "event_ticker": "PRES-WIN-25",
+        "title": "Presidential election outcome",
+        "direction": "BUY_YES",
+        "weight": 0.5,
+        "enabled": true
+      },
+      {
+        "market_ticker": "SENATE-CONTROL-25",
+        "event_ticker": "SENATE-CONTROL-25",
+        "title": "Senate control 2025",
+        "direction": "BUY_YES",
+        "weight": 0.5,
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "theme_id": "ai_progress",
+    "name": "AI Progress Stalls",
+    "description": "Bet against major AI milestones in the near term.",
+    "legs": [
+      {
+        "market_ticker": "AI-MILESTONE-26",
+        "event_ticker": "AI-MILESTONE-26",
+        "title": "Frontier model milestone by 2026",
+        "direction": "SELL_YES",
+        "weight": 0.5,
+        "enabled": true
+      },
+      {
+        "market_ticker": "AI-VALUATION-26",
+        "event_ticker": "AI-VALUATION-26",
+        "title": "AI company valuation threshold",
+        "direction": "SELL_YES",
+        "weight": 0.5,
+        "enabled": true
+      }
+    ]
+  }
+]
