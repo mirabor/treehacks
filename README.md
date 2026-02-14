@@ -1,4 +1,4 @@
-# Antigravity - Kalshi ETF Engine
+# Kalshi ETF Engine
 
 A thematic ETF engine for Kalshi event contracts.
 
