@@ -1,0 +1,5 @@
+streamlit
+requests
+cryptography
+openai
+python-dotenv
