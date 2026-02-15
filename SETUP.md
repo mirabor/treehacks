@@ -45,6 +45,18 @@ streamlit run streamlit_app.py
 
 Then open **http://localhost:8501**.
 
+### 5. Test Buy (optional)
+
+Minimal UI to place a single contract (hardcoded or LLM-found market):
+
+```bash
+cd frontend
+source ../treehacks2026/bin/activate
+streamlit run test_buy.py
+```
+
+Opens on another port (e.g. 8502). Use **Buy 1 YES contract** to verify the Kalshi demo dashboard updates. Requires backend running.
+
 ---
 
-Optional: replace placeholder tickers in `backend/themes.json` with real open Kalshi tickers so preview/execute use live markets.
+Optional: replace tickers in `backend/themes.json` with real open Kalshi markets. Demo uses live tickers (Denver/Miami weather, Math & Logic).

@@ -91,12 +91,12 @@ def main():
     key = theme_id
     if key not in st.session_state.overrides:
         st.session_state.overrides[key] = {
-            leg["market_ticker"]: {
+            f"{leg['market_ticker']}_{i}": {
                 "enabled": leg.get("enabled", True),
                 "direction": leg.get("direction", "BUY_YES"),
                 "weight": leg.get("weight", 1.0 / len(legs)),
             }
-            for leg in legs
+            for i, leg in enumerate(legs)
         }
     overrides = st.session_state.overrides[key]
 
@@ -119,13 +119,14 @@ def main():
 
     for i, leg in enumerate(legs):
         ticker = leg["market_ticker"]
-        o = overrides.get(ticker, {})
+        leg_key = f"{ticker}_{i}"
+        o = overrides.get(ticker, overrides.get(leg_key, {}))
         with st.container():
             c0, c1, c2, c3, c4, c5 = st.columns([1, 3, 2, 2, 2, 2])
             with c0:
-                enabled = st.checkbox("", value=o.get("enabled", True), key=f"en_{key}_{ticker}")
-                overrides[ticker] = overrides.get(ticker, {})
-                overrides[ticker]["enabled"] = enabled
+                enabled = st.checkbox("", value=o.get("enabled", True), key=f"en_{key}_{leg_key}")
+                overrides[leg_key] = overrides.get(leg_key, {})
+                overrides[leg_key]["enabled"] = enabled
             with c1:
                 st.caption(leg.get("title", ticker))
             with c2:
@@ -133,25 +134,27 @@ def main():
                     "Direction",
                     DIRECTION_OPTIONS,
                     index=DIRECTION_OPTIONS.index(o.get("direction", "BUY_YES")),
-                    key=f"dir_{key}_{ticker}",
+                    key=f"dir_{key}_{leg_key}",
                     label_visibility="collapsed",
                 )
-                overrides[ticker]["direction"] = direction
+                overrides[leg_key]["direction"] = direction
             with c3:
                 weight = st.slider(
                     "Weight",
                     0.0,
                     100.0,
                     (o.get("weight", 1.0 / len(legs)) * 100),
-                    key=f"wt_{key}_{ticker}",
+                    key=f"wt_{key}_{leg_key}",
                     label_visibility="collapsed",
                 ) / 100.0
-                overrides[ticker]["weight"] = weight
+                overrides[leg_key]["weight"] = weight
 
-    overrides_for_api = {
-        ticker: {"enabled": o.get("enabled", True), "direction": o.get("direction", "BUY_YES"), "weight": o.get("weight", 0)}
-        for ticker, o in overrides.items()
-    }
+    overrides_for_api = {}
+    for i, leg in enumerate(legs):
+        ticker = leg["market_ticker"]
+        leg_key = f"{ticker}_{i}"
+        o = overrides.get(leg_key, overrides.get(ticker, {}))
+        overrides_for_api[ticker] = {"enabled": o.get("enabled", True), "direction": o.get("direction", "BUY_YES"), "weight": o.get("weight", 0)}
 
     # Payload: for generated theme send full theme; for fixed send theme_id
     preview_payload = {

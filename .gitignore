@@ -137,6 +137,7 @@ celerybeat.pid
 # Environments
 .env
 .envrc
+backend/kalshi_private.key
 .venv
 treehacks2026/
 env/

@@ -1,29 +1,52 @@
 [
   {
-    "theme_id": "us_recession_risk",
-    "name": "US Recession Risk",
-    "description": "Markets tied to US recession and macro risk.",
+    "theme_id": "math_and_logic",
+    "name": "Math & Logic",
+    "description": "Demo math and logic markets.",
     "legs": [
       {
-        "market_ticker": "RECESSION-25",
-        "event_ticker": "RECESSION-25",
-        "title": "US recession in 2025?",
+        "market_ticker": "KXQUICKSETTLE-26FEB14H2040-2",
+        "event_ticker": "KXQUICKSETTLE-26FEB14H2040",
+        "title": "Will 1+1 equal 2 on Feb 14 at 20:40?",
+        "direction": "BUY_YES",
+        "weight": 0.5,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXQUICKSETTLE-26FEB14H2040-3",
+        "event_ticker": "KXQUICKSETTLE-26FEB14H2040",
+        "title": "Will 1+1 equal 3 on Feb 14 at 20:40?",
+        "direction": "BUY_NO",
+        "weight": 0.5,
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "theme_id": "denver_weather",
+    "name": "Denver Weather",
+    "description": "High temp in Denver on Feb 15, 2026.",
+    "legs": [
+      {
+        "market_ticker": "KXHIGHDEN-26FEB15-T71",
+        "event_ticker": "KXHIGHDEN-26FEB15",
+        "title": "Denver high temp >71°",
         "direction": "BUY_YES",
         "weight": 0.34,
         "enabled": true
       },
       {
-        "market_ticker": "FEDCUT-DEC25",
-        "event_ticker": "FEDCUT-DEC25",
-        "title": "Fed rate cut by Dec 2025",
+        "market_ticker": "KXHIGHDEN-26FEB15-T64",
+        "event_ticker": "KXHIGHDEN-26FEB15",
+        "title": "Denver high temp <64°",
         "direction": "BUY_YES",
         "weight": 0.33,
         "enabled": true
       },
       {
-        "market_ticker": "UNEMPLOY-25",
-        "event_ticker": "UNEMPLOY-25",
-        "title": "Unemployment above 5% in 2025",
+        "market_ticker": "KXHIGHDEN-26FEB15-B70.5",
+        "event_ticker": "KXHIGHDEN-26FEB15",
+        "title": "Denver high temp 70–71°",
         "direction": "BUY_YES",
         "weight": 0.33,
         "enabled": true
@@ -31,46 +54,23 @@
     ]
   },
   {
-    "theme_id": "election_volatility",
-    "name": "Election Volatility",
-    "description": "Election-related outcome markets.",
+    "theme_id": "miami_weather",
+    "name": "Miami Weather",
+    "description": "High temp in Miami on Feb 15, 2026.",
     "legs": [
       {
-        "market_ticker": "PRES-WIN-25",
-        "event_ticker": "PRES-WIN-25",
-        "title": "Presidential election outcome",
+        "market_ticker": "KXHIGHMIA-26FEB15-T81",
+        "event_ticker": "KXHIGHMIA-26FEB15",
+        "title": "Miami high temp >81°",
         "direction": "BUY_YES",
         "weight": 0.5,
         "enabled": true
       },
       {
-        "market_ticker": "SENATE-CONTROL-25",
-        "event_ticker": "SENATE-CONTROL-25",
-        "title": "Senate control 2025",
+        "market_ticker": "KXHIGHMIA-26FEB15-B80.5",
+        "event_ticker": "KXHIGHMIA-26FEB15",
+        "title": "Miami high temp 80–81°",
         "direction": "BUY_YES",
-        "weight": 0.5,
-        "enabled": true
-      }
-    ]
-  },
-  {
-    "theme_id": "ai_progress",
-    "name": "AI Progress Stalls",
-    "description": "Bet against major AI milestones in the near term.",
-    "legs": [
-      {
-        "market_ticker": "AI-MILESTONE-26",
-        "event_ticker": "AI-MILESTONE-26",
-        "title": "Frontier model milestone by 2026",
-        "direction": "SELL_YES",
-        "weight": 0.5,
-        "enabled": true
-      },
-      {
-        "market_ticker": "AI-VALUATION-26",
-        "event_ticker": "AI-VALUATION-26",
-        "title": "AI company valuation threshold",
-        "direction": "SELL_YES",
         "weight": 0.5,
         "enabled": true
       }

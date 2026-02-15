@@ -11,6 +11,7 @@ from app.basket_service import execute, preview
 from app.config import OPENAI_API_KEY
 from app.kalshi_client import KalshiClient
 from app.llm_basket_service import generate_basket
+from app.test_order import HARDCODED_TICKER, HARDCODED_TITLE, place_order, search_market_by_query
 from app.models import (
     BasketTheme,
     ExecuteRequest,
@@ -109,3 +110,45 @@ def basket_execute(body: ExecuteRequest):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+# --- Test skeleton: single-order flow ---
+
+
+@app.get("/test/hardcoded-market")
+def test_hardcoded_market():
+    """Return a known open market for testing."""
+    return {"ticker": HARDCODED_TICKER, "title": HARDCODED_TITLE}
+
+
+@app.post("/test/search-market")
+def test_search_market(body: dict):
+    """LLM picks best matching open market for the query."""
+    query = (body.get("query") or "").strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="query required")
+    try:
+        result = search_market_by_query(get_kalshi(), query, OPENAI_API_KEY)
+        if "error" in result:
+            raise HTTPException(status_code=400, detail=result["error"])
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/test/place-order")
+def test_place_order(body: dict):
+    """Place 1 contract buy at ask (IOC). Body: { ticker, side?: yes|no }."""
+    ticker = (body.get("ticker") or "").strip()
+    if not ticker:
+        raise HTTPException(status_code=400, detail="ticker required")
+    side = (body.get("side") or "yes").lower()
+    if side not in ("yes", "no"):
+        side = "yes"
+    try:
+        result = place_order(get_kalshi(), ticker, side=side, count=1)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

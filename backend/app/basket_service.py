@@ -157,10 +157,10 @@ def preview(
 def _to_kalshi_order(leg: BasketOrderPreviewLeg, direction: Direction, basket_id: str) -> Optional[dict]:
     if leg.contracts <= 0:
         return None
-    # Kalshi accepts yes_price_dollars / no_price_dollars as fixed-point strings
-    price_str = f"{leg.price_dollars:.4f}".rstrip("0").rstrip(".")
-    if "." not in price_str:
-        price_str = f"{price_str}.0"
+    # Kalshi requires fixed-point dollars with exactly 4 decimal places (e.g. "0.7000").
+    # Valid range 0.01–0.99 (1–99 cents).
+    price = max(0.01, min(0.99, leg.price_dollars))
+    price_str = f"{price:.4f}"
     is_yes = direction in ("BUY_YES", "SELL_YES")
     action = "buy" if "BUY" in direction else "sell"
     req: dict = {
@@ -169,7 +169,7 @@ def _to_kalshi_order(leg: BasketOrderPreviewLeg, direction: Direction, basket_id
         "action": action,
         "count": leg.contracts,
         "client_order_id": f"{basket_id}:{leg.market_ticker}:{uuid.uuid4().hex[:8]}",
-        "time_in_force": "immediate_or_cancel",
+        "time_in_force": "good_till_canceled",
     }
     if is_yes:
         req["yes_price_dollars"] = price_str

@@ -112,5 +112,12 @@ class KalshiClient:
                 headers=h,
                 timeout=15.0,
             )
-            r.raise_for_status()
-        return r.json()
+            if r.status_code >= 400:
+                try:
+                    err = r.json()
+                    e = err.get("error") if isinstance(err.get("error"), dict) else {}
+                    msg = e.get("message") or err.get("message") or r.text or f"HTTP {r.status_code}"
+                except Exception:
+                    msg = r.text or f"HTTP {r.status_code}"
+                raise httpx.HTTPStatusError(msg, request=r.request, response=r)
+            return r.json()
