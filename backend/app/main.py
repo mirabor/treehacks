@@ -22,7 +22,7 @@ from app.models import (
     PreviewRequest,
 )
 
-app = FastAPI(title="Kalshi ETF Baskets", version="0.1.0")
+app = FastAPI(title="BetBasket", version="0.1.0")
 
 THEMES_PATH = Path(__file__).resolve().parent.parent / "themes.json"
 _themes: Optional[list[BasketTheme]] = None

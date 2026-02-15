@@ -2,12 +2,12 @@
   {
     "theme_id": "ai_stagnation",
     "name": "AI Stagnation Predictions",
-    "description": "A collection of markets reflecting expectations of AI research and advancements stalling before 2026.",
+    "description": "Markets reflecting expectations of AI progress stalling: pauses, regulation, and slower product rollout.",
     "legs": [
       {
-        "market_ticker": "OAIAGI-25",
-        "event_ticker": "OAIAGI",
-        "title": "Will OpenAI announce the creation of AGI?",
+        "market_ticker": "KXOAIANTH-40-OAI",
+        "event_ticker": "KXOAIANTH-40",
+        "title": "Will OpenAI or Anthropic IPO first? (OpenAI)",
         "direction": "SELL_YES",
         "weight": 0.2,
         "enabled": true
@@ -21,26 +21,26 @@
         "enabled": true
       },
       {
-        "market_ticker": "KXAILEGISLATION-27-JAN01",
-        "event_ticker": "KXAILEGISLATION-27",
-        "title": "AI regulation by 2027?",
+        "market_ticker": "KXOAIANTH-40-ANTH",
+        "event_ticker": "KXOAIANTH-40",
+        "title": "Will OpenAI or Anthropic IPO first? (Anthropic)",
         "direction": "BUY_YES",
         "weight": 0.2,
         "enabled": true
       },
       {
-        "market_ticker": "KXOAIHARDWARE-27-PC",
-        "event_ticker": "KXOAIHARDWARE-27",
-        "title": "What kind of device will Jony Ive and OpenAI announce?",
+        "market_ticker": "KXIPOOPENAI-27JUN01",
+        "event_ticker": "KXIPOOPENAI",
+        "title": "Will OpenAI announce an IPO by June 2027?",
         "direction": "SELL_YES",
         "weight": 0.2,
         "enabled": true
       },
       {
-        "market_ticker": "KXGROK-GROK5-27JAN01",
-        "event_ticker": "KXGROK-GROK5",
-        "title": "Will xAI release Grok 5 before Jan 1, 2027?",
-        "direction": "SELL_YES",
+        "market_ticker": "NYTOAI-27DEC31",
+        "event_ticker": "NYTOAI",
+        "title": "Will a court find OpenAI infringed NYT copyright?",
+        "direction": "BUY_YES",
         "weight": 0.2,
         "enabled": true
       }

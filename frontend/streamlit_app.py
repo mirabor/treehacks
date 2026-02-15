@@ -1,4 +1,4 @@
-"""Kalshi ETF Baskets — Trade themed baskets of prediction markets. Run backend first."""
+"""BetBasket — Trade themed baskets of prediction markets. Run backend first."""
 from __future__ import annotations
 
 import os
@@ -160,7 +160,7 @@ def _render_market_details(m: dict, *, show_orderbook: bool = True) -> None:
     st.markdown(f"[View on Kalshi demo →](https://demo.kalshi.com/markets/{ticker})")
 
 
-st.set_page_config(page_title="Kalshi ETF Baskets", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="BetBasket", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
 <style>
@@ -169,18 +169,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-with st.sidebar:
-    st.markdown("### What is Kalshi?")
-    st.markdown("""
-    **Kalshi** is a regulated prediction market. You trade contracts on real-world outcomes.
-
-    **YES vs NO** — You profit if the outcome happens (YES) or doesn't (NO).
-    **Bid vs Ask** — Buy at ask, sell at bid.
-    **Settlement** — Winning contracts pay **$1** each.
-    """)
-    st.caption("Uses Kalshi demo. No real money.")
-
-st.title("Kalshi ETF Baskets")
+st.title("BetBasket")
 st.markdown("Search events, build a basket, and trade in one click.")
 
 try:
@@ -357,6 +346,7 @@ for i, leg in enumerate(legs):
                 st.caption("Could not load market details.")
                 st.markdown(f"[View on Kalshi demo →](https://demo.kalshi.com/markets/{ticker})")
 
+default_weight = 1.0 / len(legs) if legs else 0
 overrides_for_api = {}
 for i, leg in enumerate(legs):
     ticker = leg["market_ticker"]
@@ -364,12 +354,15 @@ for i, leg in enumerate(legs):
     o = overrides.get(leg_key, overrides.get(ticker, {}))
     base_direction = leg.get("direction", "BUY_YES")
     direction = _flip_direction(base_direction) if bet_against else base_direction
-    overrides_for_api[ticker] = {"enabled": o.get("enabled", True), "direction": direction, "weight": o.get("weight", 0)}
+    w = o.get("weight")
+    if w is None or (isinstance(w, (int, float)) and w <= 0):
+        w = leg.get("weight", default_weight)
+    overrides_for_api[ticker] = {"enabled": o.get("enabled", True), "direction": direction, "weight": w}
 
 preview_payload = {"theme_id": theme_id, "total_budget_dollars": total_budget, "overrides": overrides_for_api}
 execute_payload = {"theme_id": theme_id, "total_budget_dollars": total_budget, "overrides": overrides_for_api}
-# Pass inline theme when from search/LLM (event tickers or generated)
-if theme and (theme_id == "generated" or (theme_id and "-" in str(theme_id) and str(theme_id).startswith("KX"))):
+# Always pass theme so backend has full legs (avoids theme_id lookup and ensures all legs are present)
+if theme:
     preview_payload["theme"] = theme
     execute_payload["theme"] = theme
 
@@ -406,6 +399,10 @@ if "last_preview" in st.session_state:
         st.metric("Total contracts", total_contracts)
     with col3:
         st.metric("Order type", "Resting (GTC)")
+    legs_with_orders = sum(1 for p in pre.get("legs", []) if (p.get("contracts") or 0) > 0)
+    legs_skipped = len(pre.get("legs", [])) - legs_with_orders
+    if legs_skipped > 0:
+        st.caption(f"{legs_with_orders} of {len(pre.get('legs', []))} legs have orders; {legs_skipped} skipped (market closed or no bid/ask).")
     st.caption("Orders will rest on the book until filled or canceled.")
     for pl in pre.get("legs", []):
         title = pl.get("title", pl.get("market_ticker"))

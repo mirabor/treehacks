@@ -1,4 +1,4 @@
-# 📈 Kalshi ETF Baskets
+# BetBasket
 
 **Trade prediction-market baskets like ETFs — one click, multiple markets.**
 
@@ -6,7 +6,7 @@ Built at [TreeHacks](https://www.treehacks.com/) 2026.
 
 ---
 
-## 💡 The Idea
+## The Idea
 
 Prediction markets (like [Kalshi](https://kalshi.com)) let you bet on real-world outcomes — elections, Fed policy, AI milestones, sports. But placing individual bets across many markets is tedious. What if you could:
 
@@ -18,7 +18,7 @@ Think of it as an **ETF for prediction markets**: diversify across a thesis inst
 
 ---
 
-## ✨ What We Built
+## What We Built
 
 ### Three Ways to Build a Basket
 
@@ -43,7 +43,7 @@ Think of it as an **ETF for prediction markets**: diversify across a thesis inst
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Tech |
 |-------|------|
@@ -55,7 +55,7 @@ Think of it as an **ETF for prediction markets**: diversify across a thesis inst
 
 ---
 
-## 🧗 Technical Challenges & How We Solved Them
+## Technical Challenges & How We Solved Them
 
 ### 1. **Matching natural language to markets**
 
@@ -89,7 +89,7 @@ Think of it as an **ETF for prediction markets**: diversify across a thesis inst
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ### Prerequisites
 
@@ -151,7 +151,7 @@ Open **http://localhost:8501**.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 treehacks/
@@ -176,7 +176,7 @@ treehacks/
 
 ---
 
-## 📜 License
+## License
 
 MIT.
 
