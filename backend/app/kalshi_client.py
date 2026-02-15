@@ -97,6 +97,31 @@ class KalshiClient:
                 params = {"status": "open", "limit": params["limit"], "cursor": cursor}
         return all_markets[:limit]
 
+    def get_open_events(self, limit=None, with_nested_markets: bool = True) -> list[dict]:
+        """Fetch all open events (public, no auth). Returns list of event objects with nested markets."""
+        path = "/trade-api/v2/events"
+        page_limit = 200
+        params: dict[str, Any] = {
+            "status": "open",
+            "limit": page_limit,
+            "with_nested_markets": with_nested_markets,
+        }
+        all_events: list[dict] = []
+        with httpx.Client() as client:
+            while True:
+                r = client.get(f"{self.base}{path}", params=params, timeout=60.0)
+                r.raise_for_status()
+                data = r.json()
+                events = data.get("events", [])
+                all_events.extend(events)
+                cursor = data.get("cursor")
+                if not cursor or len(events) == 0:
+                    break
+                if limit is not None and len(all_events) >= limit:
+                    break
+                params = {"status": "open", "limit": page_limit, "with_nested_markets": with_nested_markets, "cursor": cursor}
+        return all_events[:limit] if limit is not None else all_events
+
     def batch_create_orders(self, orders: list[dict]) -> dict[str, Any]:
         """POST /portfolio/orders/batched. orders: list of CreateOrderRequest."""
         key = self._get_key()

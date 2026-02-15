@@ -59,4 +59,39 @@ Opens on another port (e.g. 8502). Use **Buy 1 YES contract** to verify the Kals
 
 ---
 
-Optional: replace tickers in `backend/themes.json` with real open Kalshi markets. Demo uses live tickers (Denver/Miami weather, Math & Logic).
+### 6. Refresh themes (optional)
+
+Pre-defined themes may use markets that have closed. To refresh `backend/themes.json` with current open markets:
+
+```bash
+cd backend
+source ../treehacks2026/bin/activate
+python scripts/update_themes.py
+```
+
+Restart the backend (uvicorn) to load the updated themes.
+
+### 7. Initialize events database (required for search)
+
+To search events by keyword and build baskets:
+
+```bash
+cd backend
+source ../treehacks2026/bin/activate
+python scripts/init_events_db.py
+```
+
+Creates `events.db` with events indexed by volume. The UI shows top 20 traded events by default; type a keyword to filter (e.g. Fed, NBA, Democratic).
+
+### 8. Fetch events to file (optional)
+
+To export the full events list for reference:
+
+```bash
+cd backend
+python scripts/fetch_events.py
+```
+
+Creates:
+- `events_list_summary.json` — slim reference — committed to repo
+- `events_list.json` — full export — gitignored

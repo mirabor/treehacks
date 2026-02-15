@@ -8,6 +8,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException
 
 from app.basket_service import execute, preview
+from app.events_db import get_event, search_events
 from app.config import OPENAI_API_KEY
 from app.kalshi_client import KalshiClient
 from app.llm_basket_service import generate_basket
@@ -110,6 +111,80 @@ def basket_execute(body: ExecuteRequest):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/markets/open")
+def list_open_markets(limit: int = 200):
+    """List open markets from Kalshi demo (public, no auth)."""
+    markets = get_kalshi().get_open_markets(limit=limit)
+    return {"markets": markets, "count": len(markets)}
+
+
+@app.get("/markets")
+def get_markets(tickers: str = ""):
+    """Fetch specific markets by ticker (comma-separated). Returns list of market objects."""
+    if not tickers.strip():
+        return {"markets": []}
+    ticker_list = [t.strip() for t in tickers.split(",") if t.strip()]
+    if not ticker_list:
+        return {"markets": []}
+    by_ticker = get_kalshi().get_markets(ticker_list)
+    return {"markets": [by_ticker[t] for t in ticker_list if t in by_ticker]}
+
+
+@app.get("/events/search")
+def search_events_api(q: Optional[str] = None, limit: int = 20):
+    """Search events by keyword. Returns top `limit` by volume. Requires init: python scripts/init_events_db.py"""
+    try:
+        events = search_events(q=q, limit=limit)
+        return {"events": events, "count": len(events)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search failed: {e}. Run: python scripts/init_events_db.py")
+
+
+@app.get("/events/open")
+def list_open_events(limit: Optional[int] = None, with_nested_markets: bool = True):
+    """List open events from Kalshi demo (public, no auth). Omit limit for full list."""
+    events = get_kalshi().get_open_events(limit=limit, with_nested_markets=with_nested_markets)
+    return {"events": events, "count": len(events)}
+
+
+@app.get("/events/by/{event_ticker}")
+def get_event_api(event_ticker: str):
+    """Get one event by ticker for basket building."""
+    ev = get_event(event_ticker)
+    if not ev:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return ev
+
+
+@app.get("/themes/from-event/{event_ticker}")
+def theme_from_event(event_ticker: str):
+    """Build a basket theme from an event (for preview/execute)."""
+    ev = get_event(event_ticker)
+    if not ev:
+        raise HTTPException(status_code=404, detail="Event not found")
+    markets = ev.get("markets", [])
+    if not markets:
+        raise HTTPException(status_code=400, detail="Event has no markets")
+    n = len(markets)
+    legs = [
+        {
+            "market_ticker": m.get("market_ticker", ""),
+            "event_ticker": m.get("event_ticker", ev.get("event_ticker", "")),
+            "title": m.get("title", m.get("market_ticker", "Market")),
+            "direction": "BUY_YES",
+            "weight": 1.0 / n,
+            "enabled": True,
+        }
+        for m in markets if m.get("market_ticker")
+    ]
+    return {
+        "theme_id": ev.get("event_ticker", event_ticker),
+        "name": ev.get("title", event_ticker),
+        "description": f"Event: {ev.get('title', '')}",
+        "legs": legs,
+    }
 
 
 # --- Test skeleton: single-order flow ---

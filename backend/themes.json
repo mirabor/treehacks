@@ -1,75 +1,122 @@
 [
   {
-    "theme_id": "math_and_logic",
-    "name": "Math & Logic",
-    "description": "Demo math and logic markets.",
+    "theme_id": "ai_stagnation",
+    "name": "AI Stagnation Predictions",
+    "description": "A collection of markets reflecting expectations of AI research and advancements stalling before 2026.",
     "legs": [
       {
-        "market_ticker": "KXQUICKSETTLE-26FEB14H2040-2",
-        "event_ticker": "KXQUICKSETTLE-26FEB14H2040",
-        "title": "Will 1+1 equal 2 on Feb 14 at 20:40?",
-        "direction": "BUY_YES",
-        "weight": 0.5,
+        "market_ticker": "OAIAGI-25",
+        "event_ticker": "OAIAGI",
+        "title": "Will OpenAI announce the creation of AGI?",
+        "direction": "SELL_YES",
+        "weight": 0.2,
         "enabled": true
       },
       {
-        "market_ticker": "KXQUICKSETTLE-26FEB14H2040-3",
-        "event_ticker": "KXQUICKSETTLE-26FEB14H2040",
-        "title": "Will 1+1 equal 3 on Feb 14 at 20:40?",
-        "direction": "BUY_NO",
-        "weight": 0.5,
+        "market_ticker": "KXAIPAUSE-27",
+        "event_ticker": "KXAIPAUSE-27",
+        "title": "Will any of the major AI companies pause research before 2027?",
+        "direction": "BUY_YES",
+        "weight": 0.2,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXAILEGISLATION-27-JAN01",
+        "event_ticker": "KXAILEGISLATION-27",
+        "title": "AI regulation by 2027?",
+        "direction": "BUY_YES",
+        "weight": 0.2,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXOAIHARDWARE-27-PC",
+        "event_ticker": "KXOAIHARDWARE-27",
+        "title": "What kind of device will Jony Ive and OpenAI announce?",
+        "direction": "SELL_YES",
+        "weight": 0.2,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXGROK-GROK5-27JAN01",
+        "event_ticker": "KXGROK-GROK5",
+        "title": "Will xAI release Grok 5 before Jan 1, 2027?",
+        "direction": "SELL_YES",
+        "weight": 0.2,
         "enabled": true
       }
     ]
   },
   {
-    "theme_id": "denver_weather",
-    "name": "Denver Weather",
-    "description": "High temp in Denver on Feb 15, 2026.",
+    "theme_id": "trump_economic_agenda",
+    "name": "Trump Economic Agenda",
+    "description": "Markets betting on Trump administration economic policies: budget balance, manufacturing revival, and GDP growth.",
     "legs": [
       {
-        "market_ticker": "KXHIGHDEN-26FEB15-T71",
-        "event_ticker": "KXHIGHDEN-26FEB15",
-        "title": "Denver high temp >71°",
+        "market_ticker": "KXBALANCE-29",
+        "event_ticker": "KXBALANCE-29",
+        "title": "Will Trump balance the budget?",
+        "direction": "BUY_YES",
+        "weight": 0.33,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXGDPUSMAX-28-5",
+        "event_ticker": "KXGDPUSMAX-28",
+        "title": "Will quarterly GDP be above 5% in any quarter (2025–2028)?",
+        "direction": "BUY_YES",
+        "weight": 0.33,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXGDPSHAREMANU-29",
+        "event_ticker": "KXGDPSHAREMANU-29",
+        "title": "Will Trump bring back manufacturing?",
         "direction": "BUY_YES",
         "weight": 0.34,
         "enabled": true
-      },
-      {
-        "market_ticker": "KXHIGHDEN-26FEB15-T64",
-        "event_ticker": "KXHIGHDEN-26FEB15",
-        "title": "Denver high temp <64°",
-        "direction": "BUY_YES",
-        "weight": 0.33,
-        "enabled": true
-      },
-      {
-        "market_ticker": "KXHIGHDEN-26FEB15-B70.5",
-        "event_ticker": "KXHIGHDEN-26FEB15",
-        "title": "Denver high temp 70–71°",
-        "direction": "BUY_YES",
-        "weight": 0.33,
-        "enabled": true
       }
     ]
   },
   {
-    "theme_id": "miami_weather",
-    "name": "Miami Weather",
-    "description": "High temp in Miami on Feb 15, 2026.",
+    "theme_id": "climate_goals",
+    "name": "Climate Goals on Track",
+    "description": "Bet on major economies meeting their 2030 climate commitments.",
     "legs": [
       {
-        "market_ticker": "KXHIGHMIA-26FEB15-T81",
-        "event_ticker": "KXHIGHMIA-26FEB15",
-        "title": "Miami high temp >81°",
+        "market_ticker": "USCLIMATE-2030",
+        "event_ticker": "USCLIMATE",
+        "title": "Will the US meet its climate goals by 2030?",
         "direction": "BUY_YES",
         "weight": 0.5,
         "enabled": true
       },
       {
-        "market_ticker": "KXHIGHMIA-26FEB15-B80.5",
-        "event_ticker": "KXHIGHMIA-26FEB15",
-        "title": "Miami high temp 80–81°",
+        "market_ticker": "EUCLIMATE-2030",
+        "event_ticker": "EUCLIMATE",
+        "title": "Will the EU meet its climate goals by 2030?",
+        "direction": "BUY_YES",
+        "weight": 0.5,
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "theme_id": "cannabis_policy",
+    "name": "Cannabis Policy Shift",
+    "description": "Markets on marijuana rescheduling and federal cannabis policy changes.",
+    "legs": [
+      {
+        "market_ticker": "KXMJSCHEDULE-26",
+        "event_ticker": "KXMJSCHEDULE",
+        "title": "Will marijuana be rescheduled by 2026?",
+        "direction": "BUY_YES",
+        "weight": 0.5,
+        "enabled": true
+      },
+      {
+        "market_ticker": "KXMJSCHEDULE-27",
+        "event_ticker": "KXMJSCHEDULE",
+        "title": "Will marijuana be rescheduled by 2027?",
         "direction": "BUY_YES",
         "weight": 0.5,
         "enabled": true

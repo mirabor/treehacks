@@ -134,6 +134,12 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Kalshi full events export (large; use events_list_summary.json for reference)
+backend/events_list.json
+
+# Events search DB (run scripts/init_events_db.py to create)
+backend/events.db
+
 # Environments
 .env
 .envrc

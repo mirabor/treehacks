@@ -58,6 +58,13 @@ class BasketOrderPreviewLeg(BaseModel):
     contracts: int
     est_cost_dollars: float
     warnings: list[str] = Field(default_factory=list)
+    # Orderbook & settlement info
+    yes_bid_dollars: Optional[float] = None
+    yes_ask_dollars: Optional[float] = None
+    no_bid_dollars: Optional[float] = None
+    no_ask_dollars: Optional[float] = None
+    close_time: Optional[str] = None
+    rules_primary: Optional[str] = None
 
 
 class BasketOrderPreview(BaseModel):

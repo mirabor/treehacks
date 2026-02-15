@@ -1,9 +1,10 @@
-"""LLM-generated basket: fetch open markets, ask OpenAI to pick markets + directions + weights."""
+"""LLM-generated basket: use events DB (same pool as search), ask OpenAI to pick markets + directions + weights."""
 from __future__ import annotations
 
 import json
 from typing import Any, Optional
 
+from app.events_db import search_events
 from app.kalshi_client import KalshiClient
 from app.models import BasketLeg, BasketTheme, Direction
 
@@ -42,6 +43,30 @@ OPENAI_BASKET_SCHEMA = {
 
 CANDIDATE_MAX = 80
 LEG_MAX = 10
+MARKET_BATCH_SIZE = 100
+
+STOPWORDS = frozenset({
+    "the", "a", "an", "and", "or", "but", "will", "would", "think", "that", "this",
+    "in", "on", "at", "to", "for", "of", "with", "by", "is", "are", "was", "were",
+    "be", "been", "being", "it", "its", "as", "if", "when", "where", "what", "which",
+    "who", "how", "my", "your", "our", "their", "i", "me", "we", "they", "he", "she",
+})
+
+# Short keywords that match too broadly (e.g. "ai" → "Chair"); expand to specific terms
+KEYWORD_EXPANSIONS = {
+    "ai": ["OpenAI", "xAI", "ChatGPT", "Anthropic", "artificial intelligence"],
+    "fed": ["Fed", "Federal Reserve", "interest rate", "Fed Chair"],
+}
+
+
+def _extract_keywords(query: str) -> list[str]:
+    """Extract searchable keywords (e.g. 'AI', 'Fed') from user query."""
+    words = []
+    for w in (query or "").replace(",", " ").replace(".", " ").split():
+        w = w.strip().lower()
+        if len(w) >= 2 and w not in STOPWORDS:
+            words.append(w)
+    return words
 
 
 def _market_doc(m: dict) -> str:
@@ -54,17 +79,67 @@ def _market_doc(m: dict) -> str:
     return f"{ticker} | {title} | yes: {yes_sub} / no: {no_sub} | event: {event} | {rules}"
 
 
+def _get_candidate_markets(query: str, kalshi: KalshiClient) -> list[dict]:
+    """Get candidate markets from events DB (same pool as search), fallback to raw API if DB empty."""
+    tickers: list[str] = []
+    seen: set[str] = set()
+    try:
+        # Extract keywords; expand short ambiguous ones (e.g. "ai" → ["OpenAI", "xAI", ...])
+        raw_keywords = _extract_keywords(query)
+        search_terms: list[str] = []
+        for kw in raw_keywords[:5]:
+            if kw in KEYWORD_EXPANSIONS:
+                search_terms.extend(KEYWORD_EXPANSIONS[kw])
+            else:
+                search_terms.append(kw)
+        events = []
+        if search_terms:
+            for term in search_terms[:8]:
+                evs = search_events(q=term, limit=30)
+                for ev in evs:
+                    et = ev.get("event_ticker", "")
+                    if et and et not in seen:
+                        seen.add(et)
+                        events.append(ev)
+        if not events:
+            events = search_events(q="", limit=50)
+        for ev in events:
+            for m in ev.get("markets", []):
+                t = m.get("market_ticker")
+                if t:
+                    tickers.append(t)
+    except Exception:
+        pass
+
+    if not tickers:
+        # Fallback: use raw open markets (original behavior) when DB not initialized
+        markets = kalshi.get_open_markets(limit=500)
+        return markets[:CANDIDATE_MAX]
+
+    # Fetch full market data in batches
+    all_markets: list[dict] = []
+    for i in range(0, min(len(tickers), CANDIDATE_MAX * 2), MARKET_BATCH_SIZE):
+        batch = tickers[i : i + MARKET_BATCH_SIZE]
+        by_ticker = kalshi.get_markets(batch)
+        for t in batch:
+            if t in by_ticker:
+                all_markets.append(by_ticker[t])
+        if len(all_markets) >= CANDIDATE_MAX:
+            break
+    return all_markets[:CANDIDATE_MAX]
+
+
 def generate_basket(query: str, kalshi: KalshiClient, openai_api_key: str) -> BasketTheme:
-    """Fetch open markets, ask LLM to pick 5–10 with directions and weights, return BasketTheme."""
+    """Fetch candidate markets from events DB (same pool as search), ask LLM to pick 5–10 with directions and weights."""
     if not openai_api_key:
         raise ValueError("OPENAI_API_KEY not set")
 
-    markets = kalshi.get_open_markets(limit=500)
+    markets = _get_candidate_markets(query, kalshi)
     if not markets:
-        raise ValueError("No open markets returned from Kalshi")
+        raise ValueError("No open markets. Run: python scripts/init_events_db.py")
 
-    # Build candidate list (use first CANDIDATE_MAX to stay under context)
-    candidates = [{"ticker": m["ticker"], "doc": _market_doc(m), "market": m} for m in markets[:CANDIDATE_MAX]]
+    # Build candidate list
+    candidates = [{"ticker": m["ticker"], "doc": _market_doc(m), "market": m} for m in markets]
     ticker_set = {c["ticker"] for c in candidates}
     candidates_text = "\n".join(c["doc"] for c in candidates)
 

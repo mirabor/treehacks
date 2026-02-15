@@ -98,6 +98,13 @@ def preview(
     for leg in enabled:
         m = snapshots.get(leg.market_ticker)
         leg_warnings: list[str] = []
+        yb = _parse_dollars(m.get("yes_bid_dollars")) if m else None
+        ya = _parse_dollars(m.get("yes_ask_dollars")) if m else None
+        nb = _parse_dollars(m.get("no_bid_dollars")) if m else None
+        na = _parse_dollars(m.get("no_ask_dollars")) if m else None
+        close_time = m.get("close_time") if m else None
+        rules = (m.get("rules_primary") or "")[:300] if m else None
+
         if not m:
             preview_legs.append(
                 BasketOrderPreviewLeg(
@@ -125,6 +132,12 @@ def preview(
                     contracts=0,
                     est_cost_dollars=0.0,
                     warnings=leg_warnings,
+                    yes_bid_dollars=yb,
+                    yes_ask_dollars=ya,
+                    no_bid_dollars=nb,
+                    no_ask_dollars=na,
+                    close_time=close_time,
+                    rules_primary=rules,
                 )
             )
             continue
@@ -142,6 +155,12 @@ def preview(
                 contracts=max(0, contracts),
                 est_cost_dollars=round(cost, 4),
                 warnings=leg_warnings,
+                yes_bid_dollars=yb,
+                yes_ask_dollars=ya,
+                no_bid_dollars=nb,
+                no_ask_dollars=na,
+                close_time=close_time,
+                rules_primary=rules,
             )
         )
 
